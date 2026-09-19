@@ -1751,6 +1751,9 @@ class UiManager(object):
     def setFeatures(self, featureList):
         self.__ui.setFeatures(featureList)
 
+    def promptForChatMessage(self):
+        self.__ui.promptForChatMessage()
+
     def showDebugMessage(self, message):
         if constants.DEBUG_MODE and message.rstrip():
             sys.stderr.write("{}{}\n".format(time.strftime(constants.UI_TIME_FORMAT, time.localtime()), message.rstrip()))
