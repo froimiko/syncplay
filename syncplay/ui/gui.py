@@ -1644,16 +1644,27 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
         self._syncplayClient.sendChat(chatText)
 
+    _chatInputDialogOpen = False
+
     def promptForChatMessage(self):
-        chatDialog = QtWidgets.QInputDialog(self)
-        chatDialog.setWindowTitle(getMessage("chatsend-msgbox-label"))
-        chatDialog.setLabelText(getMessage("chatsendinfo-msgbox-label"))
-        chatDialog.setInputMode(QtWidgets.QInputDialog.TextInput)
-        chatDialog.setWindowFlags(chatDialog.windowFlags() | Qt.WindowStaysOnTopHint)
-        if chatDialog.exec_() == QtWidgets.QDialog.Accepted:
-            chatMessage = chatDialog.textValue()
-            if chatMessage != "":
-                self._processChatMessage(chatMessage)
+        if self._chatInputDialogOpen:
+            return
+        self._chatInputDialogOpen = True
+        try:
+            chatDialog = QtWidgets.QInputDialog()
+            chatDialog.setWindowTitle(getMessage("chatsend-msgbox-label"))
+            chatDialog.setLabelText(getMessage("chatsendinfo-msgbox-label"))
+            chatDialog.setInputMode(QtWidgets.QInputDialog.TextInput)
+            chatDialog.setWindowFlags(chatDialog.windowFlags() | Qt.WindowStaysOnTopHint)
+            chatDialog.show()
+            chatDialog.raise_()
+            chatDialog.activateWindow()
+            if chatDialog.exec_() == QtWidgets.QDialog.Accepted:
+                chatMessage = chatDialog.textValue()
+                if chatMessage != "":
+                    self._processChatMessage(chatMessage)
+        finally:
+            self._chatInputDialogOpen = False
 
     def addTopLayout(self, window):
         window.topSplit = self.topSplitter(Qt.Horizontal, self)

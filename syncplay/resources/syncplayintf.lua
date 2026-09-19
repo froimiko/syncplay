@@ -59,6 +59,7 @@ local insert_mode = false
 local line = ''
 local cursor = 1
 local key_hints_enabled = false
+local chat_input_dialog_active = false
 
 non_us_chars = {
     'А','а',
@@ -837,6 +838,10 @@ end
 function handle_enter()
     if not repl_active then
         if opts['chatInputDialogEnabled'] == true then
+            if chat_input_dialog_active then
+                -- Syncplay's chat dialog is already showing, so ignore Enter until it closes
+                return
+            end
             -- Delegate text input to Syncplay's native dialog so IME input works
             mp.command('print-text "<chat-input-requested>"')
             return
@@ -1047,6 +1052,10 @@ add_repl_bindings(bindings)
 -- Add a script-message to show the REPL and fill it with the provided text
 mp.register_script_message('type', function(text)
     show_and_type(text)
+end)
+
+mp.register_script_message('set_chat_input_dialog_active', function(active)
+    chat_input_dialog_active = (active == "true")
 end)
 
 local syncplayintfSet = false

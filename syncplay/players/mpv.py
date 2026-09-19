@@ -429,6 +429,22 @@ class MpvPlayer(BasePlayer):
         if socketPath is not None:
             self._setProperty("input-ipc-server", socketPath)
 
+    def _promptForChatMessage(self):
+        self._setChatInputDialogActive(True)
+        try:
+            self._client.ui.promptForChatMessage()
+        finally:
+            self._setChatInputDialogActive(False)
+
+    def _setChatInputDialogActive(self, active):
+        try:
+            self._listener.sendLine([
+                "script-message-to", "syncplayintf", "set_chat_input_dialog_active",
+                "true" if active else "false"
+            ])
+        except Exception:
+            self._client.ui.showDebugMessage("Could not tell mpv that the chat dialog is {}".format("active" if active else "inactive"))
+
     def _handleUnknownLine(self, line):
         self.mpvErrorCheck(line)
         if "<chat>" in line:
@@ -436,7 +452,7 @@ class MpvPlayer(BasePlayer):
             self._listener.sendChat(line[6:-7])
 
         if "<chat-input-requested>" in line:
-            self.reactor.callFromThread(self._client.ui.promptForChatMessage)
+            self.reactor.callFromThread(self._promptForChatMessage)
 
         if "<eof>" in line:
             self.eofDetected()
