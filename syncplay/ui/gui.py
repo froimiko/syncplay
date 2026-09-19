@@ -1656,6 +1656,7 @@ class MainWindow(QtWidgets.QMainWindow):
             chatDialog.setLabelText(getMessage("chatsendinfo-msgbox-label"))
             chatDialog.setInputMode(QtWidgets.QInputDialog.TextInput)
             chatDialog.setWindowFlags(chatDialog.windowFlags() | Qt.WindowStaysOnTopHint)
+            chatDialog.setWindowOpacity(constants.CHAT_INPUT_DIALOG_OPACITY)
             chatDialog.show()
             chatDialog.raise_()
             chatDialog.activateWindow()
