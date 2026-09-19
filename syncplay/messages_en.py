@@ -404,6 +404,9 @@ en = {
     "promptforstreamurl-msgbox-label": "Open media stream URL",
     "promptforstreamurlinfo-msgbox-label": "Stream URL",
 
+    "chatsend-msgbox-label": "Send chat message",
+    "chatsendinfo-msgbox-label": "Enter your chat message",
+
     "addfolder-label": "Add folder",
 
     "adduris-msgbox-label": "Add URLs to playlist (one per line)",

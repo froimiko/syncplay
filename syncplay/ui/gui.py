@@ -1632,14 +1632,28 @@ class MainWindow(QtWidgets.QMainWindow):
         chatText = self.chatInput.text()
         self.chatInput.setText("")
         if chatText != "":
-            if chatText[:1] == "/" and chatText != "/":
-                command = chatText[1:]
-                if command and command[:1] == "/":
-                    chatText = chatText[1:]
-                else:
-                    self.executeCommand(command)
-                    return
-            self._syncplayClient.sendChat(chatText)
+            self._processChatMessage(chatText)
+
+    def _processChatMessage(self, chatText):
+        if chatText[:1] == "/" and chatText != "/":
+            command = chatText[1:]
+            if command and command[:1] == "/":
+                chatText = chatText[1:]
+            else:
+                self.executeCommand(command)
+                return
+        self._syncplayClient.sendChat(chatText)
+
+    def promptForChatMessage(self):
+        chatDialog = QtWidgets.QInputDialog(self)
+        chatDialog.setWindowTitle(getMessage("chatsend-msgbox-label"))
+        chatDialog.setLabelText(getMessage("chatsendinfo-msgbox-label"))
+        chatDialog.setInputMode(QtWidgets.QInputDialog.TextInput)
+        chatDialog.setWindowFlags(chatDialog.windowFlags() | Qt.WindowStaysOnTopHint)
+        if chatDialog.exec_() == QtWidgets.QDialog.Accepted:
+            chatMessage = chatDialog.textValue()
+            if chatMessage != "":
+                self._processChatMessage(chatMessage)
 
     def addTopLayout(self, window):
         window.topSplit = self.topSplitter(Qt.Horizontal, self)

@@ -421,6 +421,7 @@ class MpvPlayer(BasePlayer):
         for option in constants.MPV_SYNCPLAYINTF_LANGUAGE_TO_SEND:
             options.append("{}={}".format(option, getMessage(option)))
         options.append("OscVisibilityChangeCompatible={}".format(constants.MPV_OSC_VISIBILITY_CHANGE_VERSION))
+        options.append("chatInputDialogEnabled={}".format(hasattr(self._client.ui, "promptForChatMessage")))
         options_string = ", ".join(options)
         self._listener.sendLine(["script-message-to", "syncplayintf", "set_syncplayintf_options",  options_string])
         self._setOSDPosition()
@@ -433,6 +434,10 @@ class MpvPlayer(BasePlayer):
         if "<chat>" in line:
             line = line.replace(constants.MPV_INPUT_BACKSLASH_SUBSTITUTE_CHARACTER, "\\")
             self._listener.sendChat(line[6:-7])
+
+        if "<chat-input-requested>" in line:
+            if hasattr(self._client.ui, "promptForChatMessage"):
+                self.reactor.callFromThread(self._client.ui.promptForChatMessage)
 
         if "<eof>" in line:
             self.eofDetected()

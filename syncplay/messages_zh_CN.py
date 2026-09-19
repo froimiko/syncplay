@@ -387,6 +387,9 @@ zh_CN = {
     "promptforstreamurl-msgbox-label": "打开媒体流URL",
     "promptforstreamurlinfo-msgbox-label": "媒体流URL",
 
+    "chatsend-msgbox-label": "发送聊天消息",
+    "chatsendinfo-msgbox-label": "输入要发送的聊天消息（支持输入法）",
+
     "addfolder-label": "添加文件夹",
 
     "adduris-msgbox-label": "添加URL到播放列表（每行一个）",

@@ -403,6 +403,9 @@ opts = {
     ['chatTopMargin'] = 25,
     ['chatLeftMargin'] = 20,
     ['chatDirectInput'] = true,
+    -- Open a native Syncplay chat dialog instead of the OSD input box
+    -- when the ENTER key is pressed (allows IME input, e.g. Chinese/Japanese/Korean)
+    ['chatInputDialogEnabled'] = false,
     --
     ['notificationTimeout'] = 3,
     ['alertTimeout'] = 5,
@@ -833,6 +836,11 @@ end
 -- Run the current command and clear the line (Enter)
 function handle_enter()
     if not repl_active then
+        if opts['chatInputDialogEnabled'] == true then
+            -- Delegate text input to Syncplay's native dialog so IME input works
+            mp.command('print-text "<chat-input-requested>"')
+            return
+        end
         set_active(true)
         return
     end
